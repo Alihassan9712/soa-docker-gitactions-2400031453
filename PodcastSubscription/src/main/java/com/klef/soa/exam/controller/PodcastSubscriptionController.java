@@ -2,7 +2,6 @@ package com.klef.soa.exam.controller;
 
 import java.util.List;
 
-import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +58,6 @@ public class PodcastSubscriptionController {
                 .body("Podcast subscription not found: " + id);
     }
 
-    @Operation(summary = "Update a podcast subscription by ID")
     @PutMapping("/UpdateById/{id}")
     public ResponseEntity<?> updateSubscriber(@PathVariable Long id, @RequestBody PodcastSubscription ps) {
 
