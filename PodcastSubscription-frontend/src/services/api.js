@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || ''
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:2025'
 
 async function parseBody(response) {
   const contentType = response.headers.get('content-type') || ''

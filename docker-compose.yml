@@ -1,0 +1,42 @@
+services:
+  postgresdb:
+    image: postgres:16-alpine
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: podcastdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - springboot-postgres-net
+
+  backend:
+    image: alihassan9712/docker-backend-2400031453:latest
+    container_name: docker-springboot
+    ports:
+      - "2025:8083"
+    depends_on:
+      - postgresdb
+    restart: on-failure
+    networks:
+      - springboot-postgres-net
+
+  frontend:
+    image: alihassan9712/docker-frontend-2400031453:latest
+    container_name: docker-react
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: on-failure
+    networks:
+      - springboot-postgres-net
+
+volumes:
+  postgres_data:
+
+networks:
+  springboot-postgres-net:
