@@ -38,7 +38,7 @@ async function request(path, options = {}) {
   try {
     response = await fetch(`${BASE_URL}${path}`, config)
   } catch {
-    throw new Error('The backend is not running or is unreachable. Please start the Spring Boot app on port 8083.')
+    throw new Error('The backend is not running or is unreachable. Please start the Docker services.')
   }
 
   const payload = await parseBody(response)
@@ -65,6 +65,6 @@ export const api = {
   getAllSubscriptions: async () => request('/DisplayAll'),
   getSubscriptionById: async (id) => request(`/Display/${id}`),
   createSubscription: async (subscription) => request('/Add', { method: 'POST', body: subscription }),
-  updateSubscription: async (id, subscription) => request(`/Update/${id}`, { method: 'PUT', body: subscription }),
+  updateSubscription: async (id, subscription) => request(`/UpdateById/${id}`, { method: 'PUT', body: subscription }),
   deleteSubscription: async (id) => request(`/Delete/${id}`, { method: 'DELETE' }),
 }

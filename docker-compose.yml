@@ -14,7 +14,9 @@ services:
       - springboot-postgres-net
 
   backend:
-    image: alihassan9712/docker-backend-2400031453:latest
+    build:
+      context: ./PodcastSubscription
+      dockerfile: backend.Dockerfile
     container_name: docker-springboot
     ports:
       - "2025:8083"
@@ -25,7 +27,11 @@ services:
       - springboot-postgres-net
 
   frontend:
-    image: alihassan9712/docker-frontend-2400031453:latest
+    build:
+      context: ./PodcastSubscription-frontend
+      dockerfile: frontend.Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:2025
     container_name: docker-react
     ports:
       - "3000:80"

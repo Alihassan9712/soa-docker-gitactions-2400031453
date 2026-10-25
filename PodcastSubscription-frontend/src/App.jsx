@@ -65,6 +65,8 @@ function App() {
   const [editForm, setEditForm] = useState(emptyForm)
   const [editErrors, setEditErrors] = useState({})
   const [isUpdating, setIsUpdating] = useState(false)
+  const [updateLookupId, setUpdateLookupId] = useState('')
+  const [isLoadingEdit, setIsLoadingEdit] = useState(false)
 
   const [deleteId, setDeleteId] = useState(null)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -225,6 +227,7 @@ function App() {
   }
 
   const openEditForm = async (id) => {
+    setIsLoadingEdit(true)
     try {
       const item = await api.getSubscriptionById(id)
       setEditItemId(id)
@@ -239,7 +242,21 @@ function App() {
       setSuccessMessage('')
     } catch (error) {
       showAlert(error.message || 'Unable to load the selected subscription.', 'error')
+    } finally {
+      setIsLoadingEdit(false)
     }
+  }
+
+  const handleUpdateById = async (event) => {
+    event.preventDefault()
+    const id = Number(updateLookupId)
+
+    if (!Number.isSafeInteger(id) || id <= 0) {
+      showAlert('Enter a valid subscription ID greater than zero.', 'error')
+      return
+    }
+
+    await openEditForm(id)
   }
 
   const handleEditChange = (event) => {
@@ -466,6 +483,34 @@ function App() {
           </div>
         </section>
 
+        <section className="card form-card shadow-sm border-0 mb-4">
+          <div className="card-body">
+            <h2 className="section-title">Update by ID</h2>
+            <p className="text-muted">Enter a subscription ID to load and edit its details.</p>
+            <form onSubmit={handleUpdateById} className="row g-3 align-items-end">
+              <div className="col-sm-8 col-md-6">
+                <label htmlFor="update-lookup-id" className="form-label">Subscription ID</label>
+                <input
+                  id="update-lookup-id"
+                  className="form-control"
+                  type="number"
+                  min="1"
+                  step="1"
+                  value={updateLookupId}
+                  onChange={(event) => setUpdateLookupId(event.target.value)}
+                  placeholder="Enter subscription ID"
+                  required
+                />
+              </div>
+              <div className="col-sm-4 col-md-auto">
+                <button type="submit" className="btn btn-primary" disabled={isLoadingEdit}>
+                  {isLoadingEdit ? 'Loading...' : 'Load subscription'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
         <section id="subscriptions" className="card shadow-sm border-0">
           <div className="card-header bg-transparent border-0 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 pb-0">
             <div>
@@ -598,7 +643,7 @@ function App() {
         <div className="modal-dialog modal-lg modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Edit subscription</h5>
+              <h5 className="modal-title">Update subscription #{editItemId} by ID</h5>
               <button type="button" className="btn-close" aria-label="Close" onClick={() => { setEditItemId(null); setEditForm(emptyForm); setEditErrors({}) }} />
             </div>
             <div className="modal-body">

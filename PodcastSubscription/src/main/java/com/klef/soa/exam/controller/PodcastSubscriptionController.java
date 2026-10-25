@@ -58,7 +58,7 @@ public class PodcastSubscriptionController {
                 .body("Podcast subscription not found: " + id);
     }
 
-    @PutMapping("/Update/{id}")
+    @PutMapping({ "/Update/{id}", "/UpdateById/{id}" })
     public ResponseEntity<?> updateSubscriber(@PathVariable Long id, @RequestBody PodcastSubscription ps) {
 
         PodcastSubscription updated = service.updateSubscriber(id, ps);
